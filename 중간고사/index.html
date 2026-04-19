@@ -29,11 +29,10 @@
 
         .grid-container {
             display: grid;
-            /* 휴대폰 화면 너비에 따라 자동으로 칸 조절 (최소 70px) */
             grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
             gap: 12px;
             width: 100%;
-            max-width: 500px; /* 모바일 가독성을 위한 최대 너비 */
+            max-width: 500px;
         }
 
         .grid-item {
@@ -50,9 +49,10 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             transition: transform 0.1s, background-color 0.2s;
             border: 1px solid #ddd;
+            /* 터치 영역 최적화 */
+            -webkit-tap-highlight-color: transparent;
         }
 
-        /* 터치 시 반응 */
         .grid-item:active {
             transform: scale(0.95);
             background-color: var(--accent-color);
@@ -82,7 +82,11 @@
         // 1번부터 53번까지 반복문으로 링크 생성
         for (let i = 1; i <= 53; i++) {
             const link = document.createElement('a');
-            link.href = `${i}.html`; // 파일명이 1.html, 2.html... 인 경우
+            
+            // 핵심 수정: 현재 폴더임을 명시하는 ./ 추가
+            // 깃허브 서버에서 같은 폴더 내 파일을 찾는 가장 정확한 방법입니다.
+            link.href = `./${i}.html`; 
+            
             link.className = 'grid-item';
             link.textContent = i;
             gridContainer.appendChild(link);
