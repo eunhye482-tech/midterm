@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>중간고사 목록</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --bg-color: #f4f7f6;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 25px;
+            font-size: 1.5rem;
+        }
+
+        .grid-container {
+            display: grid;
+            /* 휴대폰 화면 너비에 따라 자동으로 칸 조절 (최소 70px) */
+            grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+            gap: 12px;
+            width: 100%;
+            max-width: 500px; /* 모바일 가독성을 위한 최대 너비 */
+        }
+
+        .grid-item {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: white;
+            color: var(--primary-color);
+            text-decoration: none;
+            height: 60px;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.1s, background-color 0.2s;
+            border: 1px solid #ddd;
+        }
+
+        /* 터치 시 반응 */
+        .grid-item:active {
+            transform: scale(0.95);
+            background-color: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+        }
+
+        footer {
+            margin-top: 30px;
+            color: #888;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>중간고사 문항 목록</h1>
+
+    <div class="grid-container" id="linkGrid">
+        </div>
+
+    <footer>Total: 53 Questions</footer>
+
+    <script>
+        const gridContainer = document.getElementById('linkGrid');
+        
+        // 1번부터 53번까지 반복문으로 링크 생성
+        for (let i = 1; i <= 53; i++) {
+            const link = document.createElement('a');
+            link.href = `${i}.html`; // 파일명이 1.html, 2.html... 인 경우
+            link.className = 'grid-item';
+            link.textContent = i;
+            gridContainer.appendChild(link);
+        }
+    </script>
+</body>
+</html>
