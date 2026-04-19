@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>English Master - Petswell Official Notice</title>
+    <style>
+        :root { 
+            --yellow-light: #FFFDE7; --yellow-pale: #FFF9C4; --yellow-main: #FBC02D; 
+            --yellow-dark: #F57F17; --pink-soft: #FFF5F7; --text-dark: #5D4037;
+        }
+        body { font-family: 'Pretendard', sans-serif; margin: 0; background: #FFFEF0; display: flex; justify-content: center; min-height: 100vh; }
+        .phone-container { width: 100%; max-width: 450px; background: white; display: flex; flex-direction: column; position: relative; box-shadow: 0 0 20px rgba(0,0,0,0.05); }
+        .header { padding: 12px; text-align: center; font-weight: bold; color: var(--yellow-dark); border-bottom: 1px solid var(--yellow-pale); background: white; font-size: 0.95rem; position: sticky; top: 0; z-index: 10; }
+        #display-area { flex: 1; padding: 20px; display: flex; flex-direction: column; }
+        .hidden { display: none !important; }
+        .nav-btns-fixed { display: flex; padding: 15px; background: white; border-top: 1px solid #eee; margin-top: auto; position: sticky; bottom: 0; align-items: stretch; height: 80px; box-sizing: border-box; }
+        .btn-prev { background: #F5F5F5; color: #718096; border-radius: 15px; border: none; font-size: 1.1rem; font-weight: bold; cursor: pointer; width: 30%; margin-right: 10px; display: flex; align-items: center; justify-content: center; }
+        .btn-next { background: var(--yellow-main); color: var(--text-dark); border-radius: 15px; border: none; font-size: 1.1rem; font-weight: bold; cursor: pointer; flex: 1; display: flex; align-items: center; justify-content: center; }
+        .main-title-card { width: auto; background: var(--yellow-main); padding: 25px 15px; border-radius: 20px; color: var(--text-dark); margin-bottom: 20px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); box-sizing: border-box; }
+        .main-title-card h1 { margin: 0; font-size: 1.4rem; font-weight: 900; line-height: 1.3; }
+        .structure-container { background: var(--yellow-light); border: 2px solid var(--yellow-pale); border-radius: 20px; padding: 20px; margin-bottom: 20px; color: var(--text-dark); }
+        .struct-item { margin-bottom: 18px; border-bottom: 1px dashed var(--yellow-pale); padding-bottom: 10px; }
+        .struct-item:last-child { border: none; }
+        .struct-label { font-weight: 900; color: #E65100; font-size: 0.95rem; display: block; margin-bottom: 6px; }
+        .struct-text { font-size: 0.9rem; line-height: 1.6; font-weight: 500; text-align: justify; }
+        .topic-area { background: var(--pink-soft); border: 2px solid #F8BBD0; border-radius: 20px; padding: 20px; text-align: center; margin-bottom: 20px; }
+        .topic-title { font-weight: bold; color: #D81B60; font-size: 0.85rem; display: block; margin-bottom: 10px; }
+        .topic-kor { font-weight: bold; color: #333; font-size: 1rem; display: block; line-height: 1.5; margin-bottom: 8px; }
+        .topic-eng { font-size: 0.85rem; color: #666; font-style: italic; display: block; line-height: 1.4; }
+        .sentence-box { background: var(--yellow-light); padding: 20px; border-radius: 20px; font-size: 1.1rem; font-weight: 700; color: var(--text-dark); margin-bottom: 15px; border: 2px solid var(--yellow-pale); text-align: center; cursor: pointer; line-height: 1.5; }
+        .kor-box { background: #FFF5F7; padding: 20px; border-radius: 20px; font-size: 0.95rem; font-weight: 600; color: #D81B60; margin-bottom: 15px; border: 2px solid #F8BBD0; text-align: center; line-height: 1.6; }
+        .voca-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px; }
+        .voca-item { background: #fff; padding: 10px; border-radius: 10px; font-size: 0.82rem; border: 1px solid var(--yellow-pale); cursor: pointer; text-align: center; font-weight: 600; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+        .voca-item.revealed { background: var(--yellow-main); color: var(--text-dark); }
+        .blank-area { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin-bottom: 20px; padding: 10px; background: #fdfdfd; border-radius: 15px; }
+        .word-blank { border-bottom: 2px solid var(--yellow-main); min-width: 35px; text-align: center; font-size: 1rem; color: transparent; cursor: pointer; padding: 0 2px; }
+        .word-blank.revealed { color: var(--text-dark); border-bottom-color: transparent; font-weight: bold; }
+        .btn-check { background: #f0f0f0; padding: 12px; border-radius: 12px; border: none; font-weight: bold; margin-bottom: 10px; cursor: pointer; width: 100%; font-size: 0.9rem; }
+        .trans-content { display: none; padding: 15px; background: #fafafa; border-radius: 15px; border-left: 5px solid var(--yellow-main); font-size: 0.9rem; margin-bottom: 10px; }
+        .btn-start-next { background: var(--yellow-main); color: var(--text-dark); padding: 16px; border-radius: 15px; border: none; font-size: 1.1rem; font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px; }
+    </style>
+</head>
+<body>
+<div class="phone-container">
+    <div class="header" id="header-title">English Master - EBS MT2-23</div>
+    <div id="display-area"></div>
+    <div id="nav-area" class="nav-btns-fixed hidden">
+        <button class="btn-prev" onclick="handlePrev()">PREV</button>
+        <button class="btn-next" onclick="handleNext()" id="main-next-btn">NEXT</button>
+    </div>
+</div>
+<script>
+    const fullData = [
+        { en: "Dear Pet Owner,", ko: "반려동물 주인 귀하,", voca: ["Owner:주인", "🍎", "🍎", "🍎", "🍎", "🍎", "🍎", "🍎", "🍎", "🍎"] },
+        { en: "Petswell is committed to the development of animal health care products that can help your pet enjoy a longer, healthier life.", ko: "Petswell은 여러분의 반려동물이 더 길고 건강한 삶을 누리는 데 도움이 될 수 있는 동물 건강 관리 제품 개발에 전념하고 있습니다.", voca: ["committed to:~에 전념하는", "development:개발", "animal health care:동물 건강 관리", "healthier:더 건강한", "🍎", "🍎", "🍎", "🍎", "🍎", "🍎"] },
+        { en: "In order for our commitment not to be wasted, we believe that veterinarians must be central to pet health and care.", ko: "우리의 전념이 헛되지 않도록 하기 위해, 우리는 수의사가 반려동물의 건강과 관리의 중심이 되어야 한다고 믿습니다.", voca: ["commitment:전념", "wasted:헛된/낭비된", "veterinarians:수의사", "central:중심적인", "🍎", "🍎", "🍎", "🍎", "🍎", "🍎"] },
+        { en: "Based on that belief, our policy is to sell our medications for pets exclusively to licensed veterinarians.", ko: "그러한 믿음에 근거하여, 우리의 정책은 반려동물용 의약품을 면허가 있는 수의사에게만 독점적으로 판매하는 것입니다.", voca: ["belief:믿음", "policy:정책", "medications:의약품", "exclusively:독점적으로", "licensed:면허가 있는", "🍎", "🍎", "🍎", "🍎", "🍎"] },
+        { en: "We do not sell our medications for pets to retail outlets, pet supply stores, or any internet site.", ko: "우리는 반려동물용 의약품을 소매점, 반려동물 용품점 또는 어떠한 인터넷 사이트에도 판매하지 않습니다.", voca: ["retail outlets:소매점", "supply stores:용품점", "🍎", "🍎", "🍎", "🍎", "🍎", "🍎", "🍎", "🍎"] },
+        { en: "We do not know how our products reach these businesses, so we can’t ensure that proper handling occurs and thus we will not provide any guarantee for the products.", ko: "우리는 우리 제품이 어떻게 이러한 업체들에 도달하는지 알지 못하므로, 적절한 취급이 이루어지는지 보장할 수 없으며 따라서 제품에 대해 어떠한 보증도 제공하지 않을 것입니다.", voca: ["reach:도달하다", "ensure:보장하다", "proper handling:적절한 취급", "occur:발생하다/이루어지다", "provide:제공하다", "guarantee:보증", "🍎", "🍎", "🍎", "🍎"] },
+        { en: "Therefore, I encourage you not to purchase our products through unauthorized sources.", ko: "그러므로, 승인되지 않은 출처를 통해 우리 제품을 구매하지 마실 것을 권장합니다.", voca: ["Therefore:그러므로", "encourage:권장하다", "purchase:구매하다", "unauthorized:승인되지 않은", "sources:출처", "🍎", "🍎", "🍎", "🍎", "🍎"] },
+        { en: "We wish your pet good health.", ko: "여러분의 반려동물의 건강을 기원합니다.", voca: ["wish:기원하다", "🍎", "🍎", "🍎", "🍎", "🍎", "🍎", "🍎", "🍎", "🍎"] },
+        { en: "Sincerest regards,", ko: "진심을 담아,", voca: ["Sincerest regards:진심을 담아(맺음말)", "🍎", "🍎", "🍎", "🍎", "🍎", "🍎", "🍎", "🍎", "🍎"] },
+        { en: "Steve Leigh Vice President Petswell", ko: "Steve Leigh, Petswell 부사장", voca: ["Vice President:부사장", "🍎", "🍎", "🍎", "🍎", "🍎", "🍎", "🍎", "🍎", "🍎"] }
+    ];
+
+    let currentMode = 'INTRO'; let currentIdx = 0; const synth = window.speechSynthesis;
+
+    function render() {
+        const area = document.getElementById('display-area'); const nav = document.getElementById('nav-area'); const header = document.getElementById('header-title'); area.innerHTML = '';
+        if (currentMode === 'INTRO') {
+            header.innerText = "Step 1. Overview"; nav.classList.add('hidden');
+            area.innerHTML = `<div class="main-title-card"><h1>Petswell Official Policy</h1></div>
+                <div class="structure-container">
+                    <div class="struct-item"><span class="struct-label">📍 도입: Petswell의 사명과 믿음</span><div class="struct-text">동물 건강 증진을 위해 노력하며, 수의사가 반려동물 관리의 핵심이 되어야 한다는 확고한 믿음을 가지고 있습니다.</div></div>
+                    <div class="struct-item"><span class="struct-label">📍 본론: 독점 판매 정책 및 품질 보증 문제</span><div class="struct-text">의약품은 면허 있는 수의사에게만 공급됩니다. 소매점이나 인터넷에서 파는 제품은 유통 과정을 알 수 없어 품질 보증이 불가능합니다.</div></div>
+                    <div class="struct-item"><span class="struct-label">📍 결론: 정식 경로 구매 권고</span><div class="struct-text">안전을 위해 승인되지 않은 출처에서의 구매를 자제해 주시기 바라며, 반려동물의 건강을 기원합니다.</div></div>
+                </div>
+                <div class="topic-area"><span class="topic-title">📌 Topic (주제)</span><span class="topic-kor">반려동물 의약품의 품질 보증을 위한 수의사 경유 정식 구매 당부</span><span class="topic-eng">A notice to purchase pet medications through licensed veterinarians for quality assurance.</span></div>
+                <button class="btn-start-next" onclick="startStep(2)">STEP 2: 문장 학습 시작 ▶</button><button class="btn-start-next" style="background:#FFF59D; color:#5D4037; border:2px solid #FBC02D;" onclick="startStep(3)">STEP 3: 영작 연습 시작 ▶</button>`;
+        } else {
+            const stepNum = currentMode === 'STEP2' ? 2 : 3; header.innerText = `STEP ${stepNum}. (${currentIdx + 1}/${fullData.length})`; nav.classList.remove('hidden');
+            document.getElementById('main-next-btn').innerText = (currentIdx === fullData.length - 1) ? "FINISH" : "NEXT";
+            const item = fullData[currentIdx];
+            if (currentMode === 'STEP2') {
+                area.innerHTML = `<div class="sentence-box" onclick="playTTS('${item.en.replace(/'/g, "\\'")}')">${item.en}</div><div class="voca-grid" id="voca-area"></div><button class="btn-check" onclick="toggleView('trans-area')">해석 확인하기</button><div id="trans-area" class="trans-content">${item.ko}</div>`; fillVoca(item.voca);
+            } else {
+                area.innerHTML = `<div class="kor-box">${item.ko}</div><div class="blank-area" id="blank-area"></div><div class="voca-grid" id="voca-area"></div><button class="btn-check" onclick="toggleView('trans-area')">정답 확인하기</button><div id="trans-area" class="trans-content">${item.en}</div>`; fillBlanks(item.en); fillVoca(item.voca);
+            }
+        }
+    }
+
+    function handleNext() { if (currentIdx < fullData.length - 1) { currentIdx++; render(); } else { window.location.href = '../../index.html'; } }
+    function handlePrev() { if (currentIdx > 0) { currentIdx--; render(); } else { window.location.href = '../../index.html'; } }
+
+    function fillVoca(v) { const c = document.getElementById('voca-area'); for(let i=0; i<10; i++){ const d = document.createElement('div'); d.className = 'voca-item'; if(v[i] && v[i] !== '🍎'){ const [e,k]=v[i].split(':'); d.innerText=e; d.onclick=function(){this.classList.toggle('revealed');this.innerText=this.classList.contains('revealed')?k:e;}; }else{ d.innerText='🍎'; d.style.color="#FF3B30"; d.style.cursor="default"; } c.appendChild(d); } }
+    
+    function fillBlanks(s) {
+        const c = document.getElementById('blank-area');
+        const prepositions = ["in", "on", "at", "by", "for", "from", "of", "with", "to", "into", "onto", "upon", "about", "above", "across", "after", "against", "along", "among", "around", "as", "before", "behind", "below", "beneath", "beside", "between", "beyond", "during", "except", "inside", "near", "off", "outside", "over", "past", "since", "through", "throughout", "under", "underneath", "until", "up", "within", "without"];
+        s.split(' ').forEach(w => {
+            const sp = document.createElement('span');
+            sp.className = 'word-blank'; sp.innerText = w;
+            const pureWord = w.toLowerCase().replace(/[.,'":;?!()“”]/g, "");
+            if (prepositions.includes(pureWord)) { sp.classList.add('revealed'); sp.style.borderBottomColor = 'transparent'; }
+            sp.onclick = function() { this.classList.add('revealed'); this.style.borderBottomColor = 'transparent'; playTTS(w.replace(/[.,'"]/g, "")); };
+            c.appendChild(sp);
+        });
+    }
+    
+    function startStep(s) { currentMode = 'STEP' + s; currentIdx = 0; render(); }
+    function playTTS(t) { synth.cancel(); const u = new SpeechSynthesisUtterance(t); u.lang = 'en-US'; u.rate = 0.9; synth.speak(u); }
+    function toggleView(id) { const el = document.getElementById(id); el.style.display = (el.style.display === 'block') ? 'none' : 'block'; }
+    window.onload = render;
+</script>
+</body>
+</html>

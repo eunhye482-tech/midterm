@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>English Master - The Value of Mythology</title>
+    <style>
+        :root { 
+            --yellow-light: #FFFDE7; --yellow-pale: #FFF9C4; --yellow-main: #FBC02D; 
+            --yellow-dark: #F57F17; --pink-soft: #FFF5F7; --text-dark: #5D4037;
+        }
+        body { font-family: 'Pretendard', sans-serif; margin: 0; background: #FFFEF0; display: flex; justify-content: center; min-height: 100vh; }
+        .phone-container { width: 100%; max-width: 450px; background: white; display: flex; flex-direction: column; position: relative; box-shadow: 0 0 20px rgba(0,0,0,0.05); }
+        .header { padding: 12px; text-align: center; font-weight: bold; color: var(--yellow-dark); border-bottom: 1px solid var(--yellow-pale); background: white; font-size: 0.95rem; position: sticky; top: 0; z-index: 10; }
+        #display-area { flex: 1; padding: 20px; display: flex; flex-direction: column; }
+        .hidden { display: none !important; }
+        .nav-btns-fixed { display: flex; padding: 15px; background: white; border-top: 1px solid #eee; margin-top: auto; position: sticky; bottom: 0; align-items: stretch; height: 80px; box-sizing: border-box; }
+        .btn-prev { background: #F5F5F5; color: #718096; border-radius: 15px; border: none; font-size: 1.1rem; font-weight: bold; cursor: pointer; width: 30%; margin-right: 10px; display: flex; align-items: center; justify-content: center; }
+        .btn-next { background: var(--yellow-main); color: var(--text-dark); border-radius: 15px; border: none; font-size: 1.1rem; font-weight: bold; cursor: pointer; flex: 1; display: flex; align-items: center; justify-content: center; }
+        .main-title-card { width: auto; background: var(--yellow-main); padding: 25px 15px; border-radius: 20px; color: var(--text-dark); margin-bottom: 20px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); box-sizing: border-box; }
+        .main-title-card h1 { margin: 0; font-size: 1.4rem; font-weight: 900; line-height: 1.3; }
+        .structure-container { background: var(--yellow-light); border: 2px solid var(--yellow-pale); border-radius: 20px; padding: 20px; margin-bottom: 20px; color: var(--text-dark); }
+        .struct-item { margin-bottom: 18px; border-bottom: 1px dashed var(--yellow-pale); padding-bottom: 10px; }
+        .struct-item:last-child { border: none; }
+        .struct-label { font-weight: 900; color: #E65100; font-size: 0.95rem; display: block; margin-bottom: 6px; }
+        .struct-text { font-size: 0.9rem; line-height: 1.6; font-weight: 500; text-align: justify; }
+        .topic-area { background: var(--pink-soft); border: 2px solid #F8BBD0; border-radius: 20px; padding: 20px; text-align: center; margin-bottom: 20px; }
+        .topic-title { font-weight: bold; color: #D81B60; font-size: 0.85rem; display: block; margin-bottom: 10px; }
+        .topic-kor { font-weight: bold; color: #333; font-size: 1rem; display: block; line-height: 1.5; margin-bottom: 8px; }
+        .topic-eng { font-size: 0.85rem; color: #666; font-style: italic; display: block; line-height: 1.4; }
+        .sentence-box { background: var(--yellow-light); padding: 20px; border-radius: 20px; font-size: 1.1rem; font-weight: 700; color: var(--text-dark); margin-bottom: 15px; border: 2px solid var(--yellow-pale); text-align: center; cursor: pointer; line-height: 1.5; }
+        .kor-box { background: #FFF5F7; padding: 20px; border-radius: 20px; font-size: 0.95rem; font-weight: 600; color: #D81B60; margin-bottom: 15px; border: 2px solid #F8BBD0; text-align: center; line-height: 1.6; }
+        .voca-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px; }
+        .voca-item { background: #fff; padding: 10px; border-radius: 10px; font-size: 0.82rem; border: 1px solid var(--yellow-pale); cursor: pointer; text-align: center; font-weight: 600; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+        .voca-item.revealed { background: var(--yellow-main); color: var(--text-dark); }
+        .blank-area { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin-bottom: 20px; padding: 10px; background: #fdfdfd; border-radius: 15px; }
+        .word-blank { border-bottom: 2px solid var(--yellow-main); min-width: 35px; text-align: center; font-size: 1rem; color: transparent; cursor: pointer; padding: 0 2px; }
+        .word-blank.revealed { color: var(--text-dark); border-bottom-color: transparent; font-weight: bold; }
+        .btn-check { background: #f0f0f0; padding: 12px; border-radius: 12px; border: none; font-weight: bold; margin-bottom: 10px; cursor: pointer; width: 100%; font-size: 0.9rem; }
+        .trans-content { display: none; padding: 15px; background: #fafafa; border-radius: 15px; border-left: 5px solid var(--yellow-main); font-size: 0.9rem; margin-bottom: 10px; }
+        .btn-start-next { background: var(--yellow-main); color: var(--text-dark); padding: 16px; border-radius: 15px; border: none; font-size: 1.1rem; font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px; }
+    </style>
+</head>
+<body>
+<div class="phone-container">
+    <div class="header" id="header-title">English Master - EBS MT2-32</div>
+    <div id="display-area"></div>
+    <div id="nav-area" class="nav-btns-fixed hidden">
+        <button class="btn-prev" onclick="handlePrev()">PREV</button>
+        <button class="btn-next" onclick="handleNext()" id="main-next-btn">NEXT</button>
+    </div>
+</div>
+<script>
+    const fullData = [
+        { en: "We all have been blessed with intellect.", ko: "우리 모두는 지적 능력을 부여받는 축복을 받았다.", voca: ["intellect:지적 능력", "blessed:축복받은", "🍎", "🍎", "🍎", "🍎", "🍎", "🍎", "🍎", "🍎"] },
+        { en: "We tend to think of myths as rather silly old stories about the adventures and misadventures of gods, warriors, and demons, invented by primitive people to explain a world they could not understand in our modern, scientific sense.", ko: "우리는 신화를 우리의 현대적이고 과학적인 의미로 이해할 수 없는 세상을 설명하기 위해 원시인들에 의해 발명된, 신, 전사, 그리고 악마들의 모험과 불행에 관한 다소 어리석은 옛날이야기라고 생각하는 경향이 있다.", voca: ["tend to:~하는 경향이 있다", "myths:신화", "misadventures:불행", "invented:발명된", "primitive:원시적인", "scientific:과학적인", "🍎", "🍎", "🍎", "🍎"] },
+        { en: "But it is a mistake to dismiss these stories as trivial and old-fashioned, with no more important meaning for humanity.", ko: "그러나 이러한 이야기들을 인류에게 더 이상 중요한 의미가 없는, 사소하고 구식인 것으로 치부하는 것은 실수이다.", voca: ["mistake:실수", "dismiss:치부하다", "trivial:사소한", "old-fashioned:구식인", "humanity:인류", "🍎", "🍎", "🍎", "🍎", "🍎"] },
+        { en: "Scholars such as Joseph Campbell and Claude Lévi-Strauss have shown that common themes in myths from many diverse cultures speak to us about the universal concerns of all people and about ways of thought that all humans share.", ko: "Joseph Campbell과 Claude Lévi-Strauss와 같은 학자들은 많은 다양한 문화의 신화에 나타나는 공통된 주제들이 모든 사람의 보편적인 관심사와 모든 인간이 공유하는 사고방식에 대해 우리에게 말해 준다는 것을 보여주었다.", voca: ["diverse:다양한", "universal:보편적인", "concerns:관심사", "share:공유하다", "🍎", "🍎", "🍎", "🍎", "🍎", "🍎"] },
+        { en: "As we move increasingly toward a unified world — a global village, as it has been called — it is important to see how much basic human nature we all share.", ko: "우리가 점점 더 통합된 세상, 즉 소위 지구촌으로 불리는 방향으로 나아가면서, 우리 모두가 얼마나 많은 기본적인 인간 본성을 공유하고 있는지 확인하는 것이 중요하다.", voca: ["increasingly:점점 더", "unified:통합된", "global village:지구촌", "human nature:인간 본성", "🍎", "🍎", "🍎", "🍎", "🍎", "🍎"] },
+        { en: "The systematic study of mythology reveals important points about the human psyche, about universal human motivations, fears and thought patterns.", ko: "신화에 대한 체계적인 연구는 인간의 정신, 보편적인 인간의 동기, 두려움 및 사고 패턴에 관한 중요한 점들을 드러낸다.", voca: ["systematic:체계적인", "mythology:신화(학)", "reveals:드러내다", "psyche:정신", "motivations:동기", "thought patterns:사고 패턴", "🍎", "🍎", "🍎", "🍎"] }
+    ];
+
+    let currentMode = 'INTRO'; let currentIdx = 0; const synth = window.speechSynthesis;
+
+    function render() {
+        const area = document.getElementById('display-area'); const nav = document.getElementById('nav-area'); const header = document.getElementById('header-title'); area.innerHTML = '';
+        if (currentMode === 'INTRO') {
+            header.innerText = "Step 1. Overview"; nav.classList.add('hidden');
+            area.innerHTML = `<div class="main-title-card"><h1>The Insight within Mythology</h1></div>
+                <div class="structure-container">
+                    <div class="struct-item"><span class="struct-label">📍 도입: 신화에 대한 편견</span><div class="struct-text">신화를 미개한 원시인들의 허무맹랑한 이야기로만 여기는 것은 인류 정신의 보편성을 놓치는 큰 실수입니다.</div></div>
+                    <div class="struct-item"><span class="struct-label">📍 본론: 보편적 사고와 관심사의 반영</span><div class="struct-text">다양한 문화권의 신화들이 공유하는 공통 주제는 인간이라면 누구나 가진 보편적 관심사와 사고방식을 투영하고 있습니다.</div></div>
+                    <div class="struct-item"><span class="struct-label">📍 결론: 신화 연구와 인간 정신의 이해</span><div class="struct-text">지구촌 시대를 맞아 신화의 체계적 연구는 인간 본성, 동기, 두려움 등 인류 공통의 정신적 패턴을 이해하는 데 필수적입니다.</div></div>
+                </div>
+                <div class="topic-area"><span class="topic-title">📌 Topic (주제)</span><span class="topic-kor">인간 정신의 보편성과 본성을 투영하는 신화 연구의 중요성</span><span class="topic-eng">The importance of mythology study as a reflection of universal human nature and psyche.</span></div>
+                <button class="btn-start-next" onclick="startStep(2)">STEP 2: 문장 학습 시작 ▶</button><button class="btn-start-next" style="background:#FFF59D; color:#5D4037; border:2px solid #FBC02D;" onclick="startStep(3)">STEP 3: 영작 연습 시작 ▶</button>`;
+        } else {
+            const stepNum = currentMode === 'STEP2' ? 2 : 3; header.innerText = `STEP ${stepNum}. (${currentIdx + 1}/${fullData.length})`; nav.classList.remove('hidden');
+            document.getElementById('main-next-btn').innerText = (currentIdx === fullData.length - 1) ? "FINISH" : "NEXT";
+            const item = fullData[currentIdx];
+            if (currentMode === 'STEP2') {
+                area.innerHTML = `<div class="sentence-box" onclick="playTTS('${item.en.replace(/'/g, "\\'")}')">${item.en}</div><div class="voca-grid" id="voca-area"></div><button class="btn-check" onclick="toggleView('trans-area')">해석 확인하기</button><div id="trans-area" class="trans-content">${item.ko}</div>`; fillVoca(item.voca);
+            } else {
+                area.innerHTML = `<div class="kor-box">${item.ko}</div><div class="blank-area" id="blank-area"></div><div class="voca-grid" id="voca-area"></div><button class="btn-check" onclick="toggleView('trans-area')">정답 확인하기</button><div id="trans-area" class="trans-content">${item.en}</div>`; fillBlanks(item.en); fillVoca(item.voca);
+            }
+        }
+    }
+
+    function handleNext() { if (currentIdx < fullData.length - 1) { currentIdx++; render(); } else { window.location.href = '../../index.html'; } }
+    function handlePrev() { if (currentIdx > 0) { currentIdx--; render(); } else { window.location.href = '../../index.html'; } }
+
+    function fillVoca(v) { const c = document.getElementById('voca-area'); for(let i=0; i<10; i++){ const d = document.createElement('div'); d.className = 'voca-item'; if(v[i] && v[i] !== '🍎'){ const [e,k]=v[i].split(':'); d.innerText=e; d.onclick=function(){this.classList.toggle('revealed');this.innerText=this.classList.contains('revealed')?k:e;}; }else{ d.innerText='🍎'; d.style.color="#FF3B30"; d.style.cursor="default"; } c.appendChild(d); } }
+    
+    function fillBlanks(s) {
+        const c = document.getElementById('blank-area');
+        const prepositions = ["in", "on", "at", "by", "for", "from", "of", "with", "to", "into", "onto", "upon", "about", "above", "across", "after", "against", "along", "among", "around", "as", "before", "behind", "below", "beneath", "beside", "between", "beyond", "during", "except", "inside", "near", "off", "outside", "over", "past", "since", "through", "throughout", "under", "underneath", "until", "up", "within", "without"];
+        s.split(' ').forEach(w => {
+            const sp = document.createElement('span');
+            sp.className = 'word-blank'; sp.innerText = w;
+            const pureWord = w.toLowerCase().replace(/[.,'":;?!()“”]/g, "");
+            if (prepositions.includes(pureWord)) { sp.classList.add('revealed'); sp.style.borderBottomColor = 'transparent'; }
+            sp.onclick = function() { this.classList.add('revealed'); this.style.borderBottomColor = 'transparent'; playTTS(w.replace(/[.,'"]/g, "")); };
+            c.appendChild(sp);
+        });
+    }
+    
+    function startStep(s) { currentMode = 'STEP' + s; currentIdx = 0; render(); }
+    function playTTS(t) { synth.cancel(); const u = new SpeechSynthesisUtterance(t); u.lang = 'en-US'; u.rate = 0.9; synth.speak(u); }
+    function toggleView(id) { const el = document.getElementById(id); el.style.display = (el.style.display === 'block') ? 'none' : 'block'; }
+    window.onload = render;
+</script>
+</body>
+</html>

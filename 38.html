@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>English Master - Artificial Light and Urban Songbirds</title>
+    <style>
+        :root { 
+            --yellow-light: #FFFDE7; --yellow-pale: #FFF9C4; --yellow-main: #FBC02D; 
+            --yellow-dark: #F57F17; --pink-soft: #FFF5F7; --text-dark: #5D4037;
+        }
+        body { font-family: 'Pretendard', sans-serif; margin: 0; background: #FFFEF0; display: flex; justify-content: center; min-height: 100vh; }
+        .phone-container { width: 100%; max-width: 450px; background: white; display: flex; flex-direction: column; position: relative; box-shadow: 0 0 20px rgba(0,0,0,0.05); }
+        .header { padding: 12px; text-align: center; font-weight: bold; color: var(--yellow-dark); border-bottom: 1px solid var(--yellow-pale); background: white; font-size: 0.95rem; position: sticky; top: 0; z-index: 10; }
+        #display-area { flex: 1; padding: 20px; display: flex; flex-direction: column; }
+        .hidden { display: none !important; }
+        .nav-btns-fixed { display: flex; padding: 15px; background: white; border-top: 1px solid #eee; margin-top: auto; position: sticky; bottom: 0; align-items: stretch; height: 80px; box-sizing: border-box; }
+        .btn-prev { background: #F5F5F5; color: #718096; border-radius: 15px; border: none; font-size: 1.1rem; font-weight: bold; cursor: pointer; width: 30%; margin-right: 10px; display: flex; align-items: center; justify-content: center; }
+        .btn-next { background: var(--yellow-main); color: var(--text-dark); border-radius: 15px; border: none; font-size: 1.1rem; font-weight: bold; cursor: pointer; flex: 1; display: flex; align-items: center; justify-content: center; }
+        .main-title-card { width: auto; background: var(--yellow-main); padding: 25px 15px; border-radius: 20px; color: var(--text-dark); margin-bottom: 20px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); box-sizing: border-box; }
+        .main-title-card h1 { margin: 0; font-size: 1.4rem; font-weight: 900; line-height: 1.3; }
+        .structure-container { background: var(--yellow-light); border: 2px solid var(--yellow-pale); border-radius: 20px; padding: 20px; margin-bottom: 20px; color: var(--text-dark); }
+        .struct-item { margin-bottom: 18px; border-bottom: 1px dashed var(--yellow-pale); padding-bottom: 10px; }
+        .struct-item:last-child { border: none; }
+        .struct-label { font-weight: 900; color: #E65100; font-size: 0.95rem; display: block; margin-bottom: 6px; }
+        .struct-text { font-size: 0.9rem; line-height: 1.6; font-weight: 500; text-align: justify; }
+        .topic-area { background: var(--pink-soft); border: 2px solid #F8BBD0; border-radius: 20px; padding: 20px; text-align: center; margin-bottom: 20px; }
+        .topic-title { font-weight: bold; color: #D81B60; font-size: 0.85rem; display: block; margin-bottom: 10px; }
+        .topic-kor { font-weight: bold; color: #333; font-size: 1rem; display: block; line-height: 1.5; margin-bottom: 8px; }
+        .topic-eng { font-size: 0.85rem; color: #666; font-style: italic; display: block; line-height: 1.4; }
+        .sentence-box { background: var(--yellow-light); padding: 20px; border-radius: 20px; font-size: 1.1rem; font-weight: 700; color: var(--text-dark); margin-bottom: 15px; border: 2px solid var(--yellow-pale); text-align: center; cursor: pointer; line-height: 1.5; }
+        .kor-box { background: #FFF5F7; padding: 20px; border-radius: 20px; font-size: 0.95rem; font-weight: 600; color: #D81B60; margin-bottom: 15px; border: 2px solid #F8BBD0; text-align: center; line-height: 1.6; }
+        .voca-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px; }
+        .voca-item { background: #fff; padding: 10px; border-radius: 10px; font-size: 0.82rem; border: 1px solid var(--yellow-pale); cursor: pointer; text-align: center; font-weight: 600; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+        .voca-item.revealed { background: var(--yellow-main); color: var(--text-dark); }
+        .blank-area { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin-bottom: 20px; padding: 10px; background: #fdfdfd; border-radius: 15px; }
+        .word-blank { border-bottom: 2px solid var(--yellow-main); min-width: 35px; text-align: center; font-size: 1rem; color: transparent; cursor: pointer; padding: 0 2px; }
+        .word-blank.revealed { color: var(--text-dark); border-bottom-color: transparent; font-weight: bold; }
+        .btn-check { background: #f0f0f0; padding: 12px; border-radius: 12px; border: none; font-weight: bold; margin-bottom: 10px; cursor: pointer; width: 100%; font-size: 0.9rem; }
+        .trans-content { display: none; padding: 15px; background: #fafafa; border-radius: 15px; border-left: 5px solid var(--yellow-main); font-size: 0.9rem; margin-bottom: 10px; }
+        .btn-start-next { background: var(--yellow-main); color: var(--text-dark); padding: 16px; border-radius: 15px; border: none; font-size: 1.1rem; font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px; }
+    </style>
+</head>
+<body>
+<div class="phone-container">
+    <div class="header" id="header-title">English Master - EBS MT2-35</div>
+    <div id="display-area"></div>
+    <div id="nav-area" class="nav-btns-fixed hidden">
+        <button class="btn-prev" onclick="handlePrev()">PREV</button>
+        <button class="btn-next" onclick="handleNext()" id="main-next-btn">NEXT</button>
+    </div>
+</div>
+<script>
+    const fullData = [
+        { en: "The artificial light at night prolongs the day.", ko: "밤의 인공 조명은 낮 시간을 연장한다.", voca: ["artificial light:인공 조명", "prolongs:연장하다", "🍎", "🍎", "🍎", "🍎", "🍎", "🍎", "🍎", "🍎"] },
+        { en: "Urban songbirds singing in the morning start singing earlier than songbirds of the same species in forest areas.", ko: "아침에 노래하는 도시의 명금류는 숲속 지역에 있는 같은 종의 명금류보다 노래를 더 일찍 시작한다.", voca: ["Urban:도시의", "songbirds:명금류", "same species:같은 종", "forest areas:숲속 지역", "🍎", "🍎", "🍎", "🍎", "🍎", "🍎"] },
+        { en: "Davide Dominoni and his team of international scientists and researchers were able to determine a difference of 17–29 minutes.", ko: "Davide Dominoni와 그의 국제 과학자 및 연구원 팀은 17~29분의 차이를 밝혀낼 수 있었다.", voca: ["scientists:과학자", "researchers:연구원", "determine:밝혀내다/결정하다", "difference:차이", "🍎", "🍎", "🍎", "🍎", "🍎", "🍎"] },
+        { en: "The exact effects of this behaviour are still relatively unknown at the present time.", ko: "이러한 행동의 정확한 효과는 현재로서는 여전히 상대적으로 알려져 있지 않다.", voca: ["exact effects:정확한 효과", "behaviour:행동", "relatively:상대적으로", "unknown:알려지지 않은", "🍎", "🍎", "🍎", "🍎", "🍎", "🍎"] },
+        { en: "On the one hand, observations made by the Max Planck Institute suggest that by prolonging the day and singing early, the chance of mating and the time frame to go looking for food are increased;", ko: "한편으로, Max Planck 연구소에 의한 관찰은 낮 시간을 연장하고 일찍 노래함으로써 짝짓기 기회와 먹이를 찾으러 가는 기간이 늘어난다는 점을 시사한다.", voca: ["On the one hand:한편으로", "observations:관찰", "prolonging:연장하는 것", "mating:짝짓기", "time frame:기간/시간대", "increased:증가한", "🍎", "🍎", "🍎", "🍎"] },
+        { en: "on the other hand there is speculation that the danger of becoming prey also increases accordingly.", ko: "다른 한편으로는 그에 따라 먹잇감이 될 위험도 증가한다는 추측이 있다.", voca: ["on the other hand:다른 한편으로는", "speculation:추측", "danger:위험", "prey:먹잇감", "accordingly:그에 따라", "🍎", "🍎", "🍎", "🍎", "🍎"] },
+        { en: "In addition, prolonged daily activities can have a negative effect on the birds’ physical condition and thus also on the quality of the singing.", ko: "게다가, 연장된 일상 활동은 새들의 신체 상태에 부정적인 영향을 미칠 수 있고, 따라서 노래의 질에도 부정적인 영향을 미칠 수 있다.", voca: ["In addition:게다가", "negative effect:부정적 영향", "physical condition:신체 상태", "quality:질", "🍎", "🍎", "🍎", "🍎", "🍎", "🍎"] },
+        { en: "As a result, the search for a reproductive partner becomes more difficult due to a lack of vocal attractiveness, i.e. weakened birdsong.", ko: "결과적으로, 목소리의 매력 부족, 즉 약해진 새 노랫소리로 인해 번식 파트너를 찾는 것이 더 어려워진다.", voca: ["As a result:결과적으로", "reproductive partner:번식 파트너", "vocal attractiveness:목소리의 매력", "i.e.:즉", "weakened:약해진", "🍎", "🍎", "🍎", "🍎", "🍎"] }
+    ];
+
+    let currentMode = 'INTRO'; let currentIdx = 0; const synth = window.speechSynthesis;
+
+    function render() {
+        const area = document.getElementById('display-area'); const nav = document.getElementById('nav-area'); const header = document.getElementById('header-title'); area.innerHTML = '';
+        if (currentMode === 'INTRO') {
+            header.innerText = "Step 1. Overview"; nav.classList.add('hidden');
+            area.innerHTML = `<div class="main-title-card"><h1>Light Pollution and Songbirds</h1></div>
+                <div class="structure-container">
+                    <div class="struct-item"><span class="struct-label">📍 도입: 인공 조명으로 인한 노래 시간의 변화</span><div class="struct-text">밤의 인공 조명이 낮을 연장시켜 도시의 새들이 숲속 새들보다 약 17~29분 더 일찍 노래를 시작하게 만듭니다.</div></div>
+                    <div class="struct-item"><span class="struct-label">📍 본론: 연장된 활동의 양면성</span><div class="struct-text">일찍 노래하면 짝짓기 기회와 먹이 탐색 시간은 늘어나지만, 동시에 포식자에게 잡힐 위험도 커진다는 추측이 있습니다.</div></div>
+                    <div class="struct-item"><span class="struct-label">📍 결론: 신체 저하와 번식의 어려움</span><div class="struct-text">활동 과다로 체력이 떨어지면 노랫소리의 질이 낮아지고, 결국 매력 부족으로 짝을 찾는 데 어려움을 겪게 됩니다.</div></div>
+                </div>
+                <div class="topic-area"><span class="topic-title">📌 Topic (주제)</span><span class="topic-kor">인공 조명에 의한 낮 시간 연장이 도시 명금류의 생존과 번식에 미치는 영향</span><span class="topic-eng">The impact of artificial light on the singing behavior and reproduction of urban songbirds.</span></div>
+                <button class="btn-start-next" onclick="startStep(2)">STEP 2: 문장 학습 시작 ▶</button><button class="btn-start-next" style="background:#FFF59D; color:#5D4037; border:2px solid #FBC02D;" onclick="startStep(3)">STEP 3: 영작 연습 시작 ▶</button>`;
+        } else {
+            const stepNum = currentMode === 'STEP2' ? 2 : 3; header.innerText = `STEP ${stepNum}. (${currentIdx + 1}/${fullData.length})`; nav.classList.remove('hidden');
+            document.getElementById('main-next-btn').innerText = (currentIdx === fullData.length - 1) ? "FINISH" : "NEXT";
+            const item = fullData[currentIdx];
+            if (currentMode === 'STEP2') {
+                area.innerHTML = `<div class="sentence-box" onclick="playTTS('${item.en.replace(/'/g, "\\'")}')">${item.en}</div><div class="voca-grid" id="voca-area"></div><button class="btn-check" onclick="toggleView('trans-area')">해석 확인하기</button><div id="trans-area" class="trans-content">${item.ko}</div>`; fillVoca(item.voca);
+            } else {
+                area.innerHTML = `<div class="kor-box">${item.ko}</div><div class="blank-area" id="blank-area"></div><div class="voca-grid" id="voca-area"></div><button class="btn-check" onclick="toggleView('trans-area')">정답 확인하기</button><div id="trans-area" class="trans-content">${item.en}</div>`; fillBlanks(item.en); fillVoca(item.voca);
+            }
+        }
+    }
+
+    function handleNext() { if (currentIdx < fullData.length - 1) { currentIdx++; render(); } else { window.location.href = '../../index.html'; } }
+    function handlePrev() { if (currentIdx > 0) { currentIdx--; render(); } else { window.location.href = '../../index.html'; } }
+
+    function fillVoca(v) { const c = document.getElementById('voca-area'); for(let i=0; i<10; i++){ const d = document.createElement('div'); d.className = 'voca-item'; if(v[i] && v[i] !== '🍎'){ const [e,k]=v[i].split(':'); d.innerText=e; d.onclick=function(){this.classList.toggle('revealed');this.innerText=this.classList.contains('revealed')?k:e;}; }else{ d.innerText='🍎'; d.style.color="#FF3B30"; d.style.cursor="default"; } c.appendChild(d); } }
+    
+    function fillBlanks(s) {
+        const c = document.getElementById('blank-area');
+        const prepositions = ["in", "on", "at", "by", "for", "from", "of", "with", "to", "into", "onto", "upon", "about", "above", "across", "after", "against", "along", "among", "around", "as", "before", "behind", "below", "beneath", "beside", "between", "beyond", "during", "except", "inside", "near", "off", "outside", "over", "past", "since", "through", "throughout", "under", "underneath", "until", "up", "within", "without"];
+        s.split(' ').forEach(w => {
+            const sp = document.createElement('span');
+            sp.className = 'word-blank'; sp.innerText = w;
+            const pureWord = w.toLowerCase().replace(/[.,'":;?!()“”]/g, "");
+            if (prepositions.includes(pureWord)) { sp.classList.add('revealed'); sp.style.borderBottomColor = 'transparent'; }
+            sp.onclick = function() { this.classList.add('revealed'); this.style.borderBottomColor = 'transparent'; playTTS(w.replace(/[.,'"]/g, "")); };
+            c.appendChild(sp);
+        });
+    }
+    
+    function startStep(s) { currentMode = 'STEP' + s; currentIdx = 0; render(); }
+    function playTTS(t) { synth.cancel(); const u = new SpeechSynthesisUtterance(t); u.lang = 'en-US'; u.rate = 0.9; synth.speak(u); }
+    function toggleView(id) { const el = document.getElementById(id); el.style.display = (el.style.display === 'block') ? 'none' : 'block'; }
+    window.onload = render;
+</script>
+</body>
+</html>
