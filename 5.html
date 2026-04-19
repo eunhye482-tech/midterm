@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>English Master - The Obligation to Learn</title>
+    <style>
+        :root { 
+            --yellow-light: #FFFDE7; --yellow-pale: #FFF9C4; --yellow-main: #FBC02D; 
+            --yellow-dark: #F57F17; --pink-soft: #FFF5F7; --text-dark: #5D4037;
+        }
+        body { font-family: 'Pretendard', sans-serif; margin: 0; background: #FFFEF0; display: flex; justify-content: center; min-height: 100vh; }
+        .phone-container { width: 100%; max-width: 450px; background: white; display: flex; flex-direction: column; position: relative; box-shadow: 0 0 20px rgba(0,0,0,0.05); }
+        .header { padding: 12px; text-align: center; font-weight: bold; color: var(--yellow-dark); border-bottom: 1px solid var(--yellow-pale); background: white; font-size: 0.95rem; position: sticky; top: 0; z-index: 10; }
+        #display-area { flex: 1; padding: 20px; display: flex; flex-direction: column; }
+        .hidden { display: none !important; }
+        .nav-btns-fixed { display: flex; padding: 15px; background: white; border-top: 1px solid #eee; margin-top: auto; position: sticky; bottom: 0; align-items: stretch; height: 80px; box-sizing: border-box; }
+        .btn-prev { background: #F5F5F5; color: #718096; border-radius: 15px; border: none; font-size: 1.1rem; font-weight: bold; cursor: pointer; width: 30%; margin-right: 10px; display: flex; align-items: center; justify-content: center; }
+        .btn-next { background: var(--yellow-main); color: var(--text-dark); border-radius: 15px; border: none; font-size: 1.1rem; font-weight: bold; cursor: pointer; flex: 1; display: flex; align-items: center; justify-content: center; }
+        .main-title-card { width: auto; background: var(--yellow-main); padding: 25px 15px; border-radius: 20px; color: var(--text-dark); margin-bottom: 20px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); box-sizing: border-box; }
+        .main-title-card h1 { margin: 0; font-size: 1.4rem; font-weight: 900; line-height: 1.3; }
+        .structure-container { background: var(--yellow-light); border: 2px solid var(--yellow-pale); border-radius: 20px; padding: 20px; margin-bottom: 20px; color: var(--text-dark); }
+        .struct-item { margin-bottom: 18px; border-bottom: 1px dashed var(--yellow-pale); padding-bottom: 10px; }
+        .struct-item:last-child { border: none; }
+        .struct-label { font-weight: 900; color: #E65100; font-size: 0.95rem; display: block; margin-bottom: 6px; }
+        .struct-text { font-size: 0.9rem; line-height: 1.6; font-weight: 500; text-align: justify; }
+        .topic-area { background: var(--pink-soft); border: 2px solid #F8BBD0; border-radius: 20px; padding: 20px; text-align: center; margin-bottom: 20px; }
+        .topic-title { font-weight: bold; color: #D81B60; font-size: 0.85rem; display: block; margin-bottom: 10px; }
+        .topic-kor { font-weight: bold; color: #333; font-size: 1rem; display: block; line-height: 1.5; margin-bottom: 8px; }
+        .topic-eng { font-size: 0.85rem; color: #666; font-style: italic; display: block; line-height: 1.4; }
+        .sentence-box { background: var(--yellow-light); padding: 20px; border-radius: 20px; font-size: 1.1rem; font-weight: 700; color: var(--text-dark); margin-bottom: 15px; border: 2px solid var(--yellow-pale); text-align: center; cursor: pointer; line-height: 1.5; }
+        .kor-box { background: #FFF5F7; padding: 20px; border-radius: 20px; font-size: 0.95rem; font-weight: 600; color: #D81B60; margin-bottom: 15px; border: 2px solid #F8BBD0; text-align: center; line-height: 1.6; }
+        .voca-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px; }
+        .voca-item { background: #fff; padding: 10px; border-radius: 10px; font-size: 0.82rem; border: 1px solid var(--yellow-pale); cursor: pointer; text-align: center; font-weight: 600; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+        .voca-item.revealed { background: var(--yellow-main); color: var(--text-dark); }
+        .blank-area { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin-bottom: 20px; padding: 10px; background: #fdfdfd; border-radius: 15px; }
+        .word-blank { border-bottom: 2px solid var(--yellow-main); min-width: 35px; text-align: center; font-size: 1rem; color: transparent; cursor: pointer; padding: 0 2px; }
+        .word-blank.revealed { color: var(--text-dark); border-bottom-color: transparent; font-weight: bold; }
+        .btn-check { background: #f0f0f0; padding: 12px; border-radius: 12px; border: none; font-weight: bold; margin-bottom: 10px; cursor: pointer; width: 100%; font-size: 0.9rem; }
+        .trans-content { display: none; padding: 15px; background: #fafafa; border-radius: 15px; border-left: 5px solid var(--yellow-main); font-size: 0.9rem; margin-bottom: 10px; }
+        .btn-start-next { background: var(--yellow-main); color: var(--text-dark); padding: 16px; border-radius: 15px; border: none; font-size: 1.1rem; font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px; }
+    </style>
+</head>
+<body>
+<div class="phone-container">
+    <div class="header" id="header-title">English Master - EBS MT2-25</div>
+    <div id="display-area"></div>
+    <div id="nav-area" class="nav-btns-fixed hidden">
+        <button class="btn-prev" onclick="handlePrev()">PREV</button>
+        <button class="btn-next" onclick="handleNext()" id="main-next-btn">NEXT</button>
+    </div>
+</div>
+<script>
+    const fullData = [
+        { en: "We are all well acquainted with ignorance: it is our native state.", ko: "우리 모두는 무지에 대해 잘 알고 있다. 그것은 우리의 타고난 상태이다.", voca: ["acquainted with:~에 익숙한", "ignorance:무지", "native state:타고난 상태", "🍎", "🍎", "🍎", "🍎", "🍎", "🍎", "🍎"] },
+        { en: "We begin our lives in ignorance and in need.", ko: "우리는 무지 속에서, 그리고 결핍 속에서 삶을 시작한다.", voca: ["begin:시작하다", "in need:결핍 속에", "🍎", "🍎", "🍎", "🍎", "🍎", "🍎", "🍎", "🍎"] },
+        { en: "Human beings are, to a dramatic extent when compared with other creatures, born in an “unfinished” condition, incapable even of survival without a long period of nurturance under the protective guidance of elders.", ko: "인간은 다른 생명체와 비교할 때 극적인 정도로 '미완성된' 상태로 태어나며, 어른들의 보호적인 지도 아래 장기간의 양육 없이는 생존조차 불가능하다.", voca: ["dramatic extent:극적인 정도", "creatures:생명체", "unfinished:미완성된", "condition:상태", "incapable:불가능한", "survival:생존", "nurturance:양육", "protective:보호적인", "guidance:지도", "🍎"] },
+        { en: "As Rousseau declared, “We are born weak, we need strength; we are born entirely destitute, we need help; we are born stupid, we need understanding.", ko: "루소가 선언했듯이, “우리는 약하게 태어났기에 힘이 필요하고, 완전히 빈곤하게 태어났기에 도움이 필요하며, 어리석게 태어났기에 이해력이 필요하다.", voca: ["declared:선언했다", "entirely:완전히", "destitute:빈곤한", "stupid:어리석은", "understanding:이해력", "🍎", "🍎", "🍎", "🍎", "🍎"] },
+        { en: "All that we lack at birth and need in maturity is given us by education.”", ko: "태어날 때 결여되어 성숙기에 필요한 모든 것은 교육에 의해 우리에게 주어진다.”", voca: ["lack:결여하다", "birth:탄생", "maturity:성숙기", "given:주어진", "education:교육", "🍎", "🍎", "🍎", "🍎", "🍎"] },
+        { en: "Fortunately, we are also uncommonly keen learners.", ko: "다행히도, 우리는 또한 흔치 않게 열정적인 학습자이다.", voca: ["Fortunately:다행히도", "uncommonly:흔치 않게", "keen:열정적인", "learners:학습자", "🍎", "🍎", "🍎", "🍎", "🍎", "🍎"] },
+        { en: "Through the processes of human development, socialization, and education, we rapidly discover and construct the world in which we live and move and have our being.", ko: "인간 발달, 사회화, 그리고 교육의 과정을 통해, 우리는 우리가 살고 움직이며 존재하는 세상을 빠르게 발견하고 구성한다.", voca: ["processes:과정", "development:발달", "socialization:사회화", "rapidly:빠르게", "construct:구성하다", "🍎", "🍎", "🍎", "🍎", "🍎"] },
+        { en: "The obligation to learn is primal: not only to thrive, but simply to survive, we must escape the profound ignorance that shrouds us at our birth.", ko: "학습에 대한 의무는 근원적이다. 번영하기 위해서뿐만 아니라 단순히 생존하기 위해서라도, 우리는 태어날 때 우리를 뒤덮고 있는 깊은 무지에서 벗어나야만 한다.", voca: ["obligation:의무", "primal:근원적인", "thrive:번영하다", "survive:생존하다", "escape:벗어나다", "profound:깊은/심오한", "shrouds:뒤덮다", "🍎", "🍎", "🍎"] },
+        { en: "No wonder we fear ignorance.", ko: "우리가 무지를 두려워하는 것은 당연하다.", voca: ["No wonder:당연하다", "fear:두려워하다", "🍎", "🍎", "🍎", "🍎", "🍎", "🍎", "🍎", "🍎"] }
+    ];
+
+    let currentMode = 'INTRO'; let currentIdx = 0; const synth = window.speechSynthesis;
+
+    function render() {
+        const area = document.getElementById('display-area'); const nav = document.getElementById('nav-area'); const header = document.getElementById('header-title'); area.innerHTML = '';
+        if (currentMode === 'INTRO') {
+            header.innerText = "Step 1. Overview"; nav.classList.add('hidden');
+            area.innerHTML = `<div class="main-title-card"><h1>The Primal Obligation to Learn</h1></div>
+                <div class="structure-container">
+                    <div class="struct-item"><span class="struct-label">📍 도입: 인간의 근원적 상태인 무지</span><div class="struct-text">인간은 다른 생명체보다 훨씬 더 '미완성된' 상태로 태어나며, 긴 양육 기간 없이는 생존이 불가능한 존재입니다.</div></div>
+                    <div class="struct-item"><span class="struct-label">📍 본론: 교육을 통한 결핍의 충족</span><div class="struct-text">루소의 말처럼 탄생 시의 모든 약함과 어리석음은 교육을 통해 성숙에 필요한 힘과 이해로 채워지게 됩니다.</div></div>
+                    <div class="struct-item"><span class="struct-label">📍 결론: 생존을 위한 필수적 탈출</span><div class="struct-text">무지에서 벗어나는 것은 번영과 생존을 위한 근원적 의무이며, 그렇기에 인간은 본능적으로 무지를 두려워합니다.</div></div>
+                </div>
+                <div class="topic-area"><span class="topic-title">📌 Topic (주제)</span><span class="topic-kor">미완성으로 태어난 인간이 생존과 번영을 위해 학습해야 하는 근원적 의무</span><span class="topic-eng">The fundamental obligation of humans, born unfinished, to learn for survival and thriving.</span></div>
+                <button class="btn-start-next" onclick="startStep(2)">STEP 2: 문장 학습 시작 ▶</button><button class="btn-start-next" style="background:#FFF59D; color:#5D4037; border:2px solid #FBC02D;" onclick="startStep(3)">STEP 3: 영작 연습 시작 ▶</button>`;
+        } else {
+            const stepNum = currentMode === 'STEP2' ? 2 : 3; header.innerText = `STEP ${stepNum}. (${currentIdx + 1}/${fullData.length})`; nav.classList.remove('hidden');
+            document.getElementById('main-next-btn').innerText = (currentIdx === fullData.length - 1) ? "FINISH" : "NEXT";
+            const item = fullData[currentIdx];
+            if (currentMode === 'STEP2') {
+                area.innerHTML = `<div class="sentence-box" onclick="playTTS('${item.en.replace(/'/g, "\\'")}')">${item.en}</div><div class="voca-grid" id="voca-area"></div><button class="btn-check" onclick="toggleView('trans-area')">해석 확인하기</button><div id="trans-area" class="trans-content">${item.ko}</div>`; fillVoca(item.voca);
+            } else {
+                area.innerHTML = `<div class="kor-box">${item.ko}</div><div class="blank-area" id="blank-area"></div><div class="voca-grid" id="voca-area"></div><button class="btn-check" onclick="toggleView('trans-area')">정답 확인하기</button><div id="trans-area" class="trans-content">${item.en}</div>`; fillBlanks(item.en); fillVoca(item.voca);
+            }
+        }
+    }
+
+    function handleNext() { if (currentIdx < fullData.length - 1) { currentIdx++; render(); } else { window.location.href = '../../index.html'; } }
+    function handlePrev() { if (currentIdx > 0) { currentIdx--; render(); } else { window.location.href = '../../index.html'; } }
+
+    function fillVoca(v) { const c = document.getElementById('voca-area'); for(let i=0; i<10; i++){ const d = document.createElement('div'); d.className = 'voca-item'; if(v[i] && v[i] !== '🍎'){ const [e,k]=v[i].split(':'); d.innerText=e; d.onclick=function(){this.classList.toggle('revealed');this.innerText=this.classList.contains('revealed')?k:e;}; }else{ d.innerText='🍎'; d.style.color="#FF3B30"; d.style.cursor="default"; } c.appendChild(d); } }
+    
+    function fillBlanks(s) {
+        const c = document.getElementById('blank-area');
+        const prepositions = ["in", "on", "at", "by", "for", "from", "of", "with", "to", "into", "onto", "upon", "about", "above", "across", "after", "against", "along", "among", "around", "as", "before", "behind", "below", "beneath", "beside", "between", "beyond", "during", "except", "inside", "near", "off", "outside", "over", "past", "since", "through", "throughout", "under", "underneath", "until", "up", "within", "without"];
+        s.split(' ').forEach(w => {
+            const sp = document.createElement('span');
+            sp.className = 'word-blank'; sp.innerText = w;
+            const pureWord = w.toLowerCase().replace(/[.,'":;?!()“”]/g, "");
+            if (prepositions.includes(pureWord)) { sp.classList.add('revealed'); sp.style.borderBottomColor = 'transparent'; }
+            sp.onclick = function() { this.classList.add('revealed'); this.style.borderBottomColor = 'transparent'; playTTS(w.replace(/[.,'"]/g, "")); };
+            c.appendChild(sp);
+        });
+    }
+    
+    function startStep(s) { currentMode = 'STEP' + s; currentIdx = 0; render(); }
+    function playTTS(t) { synth.cancel(); const u = new SpeechSynthesisUtterance(t); u.lang = 'en-US'; u.rate = 0.9; synth.speak(u); }
+    function toggleView(id) { const el = document.getElementById(id); el.style.display = (el.style.display === 'block') ? 'none' : 'block'; }
+    window.onload = render;
+</script>
+</body>
+</html>
