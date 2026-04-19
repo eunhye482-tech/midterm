@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MIDTERM 목록</title>
+    <style>
+        :root {
+            --primary-navy: #1a2a6c;
+            --accent-yellow: #fdbb2d;
+            --bg-gray: #f0f2f5;
+        }
+
+        body {
+            font-family: -apple-system, sans-serif;
+            background-color: var(--bg-gray);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: var(--primary-navy);
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(65px, 1fr));
+            gap: 10px;
+            width: 100%;
+            max-width: 480px;
+        }
+
+        .grid-item {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: white;
+            color: var(--primary-navy);
+            text-decoration: none;
+            height: 55px;
+            border-radius: 10px;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border: 1px solid #e0e0e0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* 터치했을 때 포인트 컬러(노랑/남색) 적용 */
+        .grid-item:active {
+            background-color: var(--accent-yellow);
+            color: var(--primary-navy);
+            transform: scale(0.95);
+            border-color: var(--primary-navy);
+        }
+
+        footer {
+            margin-top: 40px;
+            color: #999;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>📝 MIDTERM QUESTIONS</h1>
+
+    <div class="grid-container" id="linkGrid"></div>
+
+    <footer>Total 53 Files</footer>
+
+    <script>
+        const gridContainer = document.getElementById('linkGrid');
+        
+        // 1번부터 53번까지 생성
+        for (let i = 1; i <= 53; i++) {
+            const link = document.createElement('a');
+            
+            // 폴더 내부에서 같은 위치의 파일을 찾을 때는 ./를 사용합니다.
+            link.href = `./${i}.html`; 
+            
+            link.className = 'grid-item';
+            link.textContent = i;
+            gridContainer.appendChild(link);
+        }
+    </script>
+</body>
+</html>
