@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MIDTERM 목록</title>
+    <title>MIDTERM LIST</title>
     <style>
         :root {
-            --primary-navy: #1a2a6c;
-            --accent-yellow: #fdbb2d;
-            --bg-gray: #f0f2f5;
+            --primary: #1a2a6c;
+            --accent: #fdbb2d;
+            --bg: #f8f9fa;
         }
 
         body {
-            font-family: -apple-system, sans-serif;
-            background-color: var(--bg-gray);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg);
             margin: 0;
             padding: 20px;
             display: flex;
@@ -22,18 +22,19 @@
         }
 
         h1 {
-            color: var(--primary-navy);
-            font-size: 1.4rem;
-            margin-bottom: 20px;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+            color: var(--primary);
+            font-size: 1.5rem;
+            margin: 20px 0;
+            font-weight: 800;
         }
 
         .grid-container {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(65px, 1fr));
+            /* 모바일 화면에서 한 줄에 4~5개씩 예쁘게 정렬 */
+            grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
             gap: 10px;
             width: 100%;
-            max-width: 480px;
+            max-width: 500px;
         }
 
         .grid-item {
@@ -41,48 +42,51 @@
             justify-content: center;
             align-items: center;
             background-color: white;
-            color: var(--primary-navy);
+            color: var(--primary);
             text-decoration: none;
-            height: 55px;
-            border-radius: 10px;
+            height: 65px;
+            border-radius: 12px;
             font-weight: bold;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            border: 1px solid #e0e0e0;
+            font-size: 1.2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            border: 1px solid #eee;
+            /* 터치 시 회색 잔상 제거 */
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* 터치했을 때 포인트 컬러(노랑/남색) 적용 */
+        /* 클릭(터치)했을 때 반응 */
         .grid-item:active {
-            background-color: var(--accent-yellow);
-            color: var(--primary-navy);
-            transform: scale(0.95);
-            border-color: var(--primary-navy);
+            background-color: var(--accent);
+            transform: scale(0.92);
+            border-color: var(--primary);
         }
 
         footer {
             margin-top: 40px;
-            color: #999;
-            font-size: 0.8rem;
+            padding-bottom: 20px;
+            color: #bbb;
+            font-size: 0.9rem;
         }
     </style>
 </head>
 <body>
 
-    <h1>📝 MIDTERM QUESTIONS</h1>
+    <h1>📝 MIDTERM EXAM</h1>
 
-    <div class="grid-container" id="linkGrid"></div>
+    <div class="grid-container" id="linkGrid">
+        </div>
 
-    <footer>Total 53 Files</footer>
+    <footer>Questions 1 to 53</footer>
 
     <script>
         const gridContainer = document.getElementById('linkGrid');
         
-        // 1번부터 53번까지 생성
         for (let i = 1; i <= 53; i++) {
             const link = document.createElement('a');
             
-            // 폴더 내부에서 같은 위치의 파일을 찾을 때는 ./를 사용합니다.
-            link.href = `./${i}.html`; 
+            // 깃허브에서 가장 안전한 상대 경로 방식
+            // 폴더 구조상 같은 위치에 있는 파일을 찾습니다.
+            link.href = i + ".html"; 
             
             link.className = 'grid-item';
             link.textContent = i;
