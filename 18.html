@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>English Master - Empathy in Ben Gurion Airport</title>
+    <style>
+        :root { 
+            --yellow-light: #FFFDE7; --yellow-pale: #FFF9C4; --yellow-main: #FBC02D; 
+            --yellow-dark: #F57F17; --pink-soft: #FFF5F7; --text-dark: #5D4037;
+        }
+        body { font-family: 'Pretendard', sans-serif; margin: 0; background: #FFFEF0; display: flex; justify-content: center; min-height: 100vh; }
+        .phone-container { width: 100%; max-width: 450px; background: white; display: flex; flex-direction: column; position: relative; box-shadow: 0 0 20px rgba(0,0,0,0.05); }
+        .header { padding: 12px; text-align: center; font-weight: bold; color: var(--yellow-dark); border-bottom: 1px solid var(--yellow-pale); background: white; font-size: 0.95rem; position: sticky; top: 0; z-index: 10; }
+        #display-area { flex: 1; padding: 20px; display: flex; flex-direction: column; }
+        .hidden { display: none !important; }
+        .nav-btns-fixed { display: flex; padding: 15px; background: white; border-top: 1px solid #eee; margin-top: auto; position: sticky; bottom: 0; align-items: stretch; height: 80px; box-sizing: border-box; }
+        .btn-prev { background: #F5F5F5; color: #718096; border-radius: 15px; border: none; font-size: 1.1rem; font-weight: bold; cursor: pointer; width: 30%; margin-right: 10px; display: flex; align-items: center; justify-content: center; }
+        .btn-next { background: var(--yellow-main); color: var(--text-dark); border-radius: 15px; border: none; font-size: 1.1rem; font-weight: bold; cursor: pointer; flex: 1; display: flex; align-items: center; justify-content: center; }
+        .main-title-card { width: auto; background: var(--yellow-main); padding: 25px 15px; border-radius: 20px; color: var(--text-dark); margin-bottom: 20px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); box-sizing: border-box; }
+        .main-title-card h1 { margin: 0; font-size: 1.4rem; font-weight: 900; line-height: 1.3; }
+        .structure-container { background: var(--yellow-light); border: 2px solid var(--yellow-pale); border-radius: 20px; padding: 20px; margin-bottom: 20px; color: var(--text-dark); }
+        .struct-item { margin-bottom: 18px; border-bottom: 1px dashed var(--yellow-pale); padding-bottom: 10px; }
+        .struct-item:last-child { border: none; }
+        .struct-label { font-weight: 900; color: #E65100; font-size: 0.95rem; display: block; margin-bottom: 6px; }
+        .struct-text { font-size: 0.9rem; line-height: 1.6; font-weight: 500; text-align: justify; }
+        .topic-area { background: var(--pink-soft); border: 2px solid #F8BBD0; border-radius: 20px; padding: 20px; text-align: center; margin-bottom: 20px; }
+        .topic-title { font-weight: bold; color: #D81B60; font-size: 0.85rem; display: block; margin-bottom: 10px; }
+        .topic-kor { font-weight: bold; color: #333; font-size: 1rem; display: block; line-height: 1.5; margin-bottom: 8px; }
+        .topic-eng { font-size: 0.85rem; color: #666; font-style: italic; display: block; line-height: 1.4; }
+        .sentence-box { background: var(--yellow-light); padding: 20px; border-radius: 20px; font-size: 1.1rem; font-weight: 700; color: var(--text-dark); margin-bottom: 15px; border: 2px solid var(--yellow-pale); text-align: center; cursor: pointer; line-height: 1.5; }
+        .kor-box { background: #FFF5F7; padding: 20px; border-radius: 20px; font-size: 0.95rem; font-weight: 600; color: #D81B60; margin-bottom: 15px; border: 2px solid #F8BBD0; text-align: center; line-height: 1.6; }
+        .voca-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px; }
+        .voca-item { background: #fff; padding: 10px; border-radius: 10px; font-size: 0.82rem; border: 1px solid var(--yellow-pale); cursor: pointer; text-align: center; font-weight: 600; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+        .voca-item.revealed { background: var(--yellow-main); color: var(--text-dark); }
+        .blank-area { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin-bottom: 20px; padding: 10px; background: #fdfdfd; border-radius: 15px; }
+        .word-blank { border-bottom: 2px solid var(--yellow-main); min-width: 35px; text-align: center; font-size: 1rem; color: transparent; cursor: pointer; padding: 0 2px; }
+        .word-blank.revealed { color: var(--text-dark); border-bottom-color: transparent; font-weight: bold; }
+        .btn-check { background: #f0f0f0; padding: 12px; border-radius: 12px; border: none; font-weight: bold; margin-bottom: 10px; cursor: pointer; width: 100%; font-size: 0.9rem; }
+        .trans-content { display: none; padding: 15px; background: #fafafa; border-radius: 15px; border-left: 5px solid var(--yellow-main); font-size: 0.9rem; margin-bottom: 10px; }
+        .btn-start-next { background: var(--yellow-main); color: var(--text-dark); padding: 16px; border-radius: 15px; border: none; font-size: 1.1rem; font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px; }
+    </style>
+</head>
+<body>
+<div class="phone-container">
+    <div class="header" id="header-title">English Master - EBS MT2-24</div>
+    <div id="display-area"></div>
+    <div id="nav-area" class="nav-btns-fixed hidden">
+        <button class="btn-prev" onclick="handlePrev()">PREV</button>
+        <button class="btn-next" onclick="handleNext()" id="main-next-btn">NEXT</button>
+    </div>
+</div>
+<script>
+    const fullData = [
+        { en: "I was once sitting in Ben Gurion Airport, waiting for my flight to be announced.", ko: "나는 한때 벤구리온 공항에 앉아 내 비행기가 안내되기를 기다리고 있었다.", voca: ["announced:안내된/발표된", "🍎", "🍎", "🍎", "🍎", "🍎", "🍎", "🍎", "🍎", "🍎"] },
+        { en: "Suddenly I heard a strange, almost animal-like noise.", ko: "갑자기 나는 이상한, 거의 동물 같은 소리를 들었다.", voca: ["Suddenly:갑자기", "strange:이상한", "animal-like:동물 같은", "noise:소리/소음", "🍎", "🍎", "🍎", "🍎", "🍎", "🍎"] },
+        { en: "I looked around and realized that a woman sitting a few rows in front of me was weeping loudly.", ko: "주위를 둘러보았고 내 앞 몇 줄 뒤에 앉은 한 여성이 크게 울고 있다는 것을 깨달았다.", voca: ["realized:깨달았다", "rows:줄", "weeping:울고 있는", "loudly:크게", "🍎", "🍎", "🍎", "🍎", "🍎", "🍎"] },
+        { en: "I was a little thrown and did not know what to do.", ko: "나는 조금 당황했고 무엇을 해야 할지 몰랐다.", voca: ["thrown:당황한", "🍎", "🍎", "🍎", "🍎", "🍎", "🍎", "🍎", "🍎", "🍎"] },
+        { en: "Should I allow her privacy? Should I approach her?", ko: "그녀의 사생활을 존중해 주어야 할까? 그녀에게 다가가야 할까?", voca: ["allow:허용하다/존중하다", "privacy:사생활", "approach:다가가다", "🍎", "🍎", "🍎", "🍎", "🍎", "🍎", "🍎"] },
+        { en: "My heart went out to her crying alone in an airport.", ko: "공항에서 혼자 울고 있는 그녀에게 마음이 쓰였다.", voca: ["heart went out:마음이 쓰이다", "alone:혼자", "🍎", "🍎", "🍎", "🍎", "🍎", "🍎", "🍎", "🍎"] },
+        { en: "An older woman, who had also noticed her, went up to her and said something, but then moved away again and I guessed that she had refused an offer of help.", ko: "역시 그녀를 알아차린 한 나이 든 여성이 그녀에게 다가가 무언가를 말했지만, 이내 다시 자리를 떴고, 나는 그녀가 도움의 제안을 거절했다고 짐작했다.", voca: ["noticed:알아차린", "guessed:짐작했다", "refused:거절했다", "offer of help:도움의 제안", "🍎", "🍎", "🍎", "🍎", "🍎", "🍎"] },
+        { en: "She continued with her aching crying, and I continued to wonder if I should do something nonetheless.", ko: "그녀는 가슴 아픈 울음을 계속했고, 나는 그럼에도 불구하고 내가 무언가를 해야 할지 계속 고민했다.", voca: ["aching:가슴 아픈", "nonetheless:그럼에도 불구하고", "🍎", "🍎", "🍎", "🍎", "🍎", "🍎", "🍎", "🍎"] },
+        { en: "Eventually I took my courage and went over.", ko: "결국 나는 용기를 내어 다가갔다.", voca: ["Eventually:결국", "took courage:용기를 내다", "went over:다가갔다", "🍎", "🍎", "🍎", "🍎", "🍎", "🍎", "🍎"] },
+        { en: "Rather than asking if everything was OK, which would probably have elicited a polite rebuttal as in the case of the other woman, I sat down next to her and said, “I don’t want to bother you, but I couldn’t help noticing that you are in distress.”", ko: "모든 것이 괜찮은지 묻기보다는(그랬다면 다른 여성의 경우처럼 아마도 정중한 거절을 이끌어냈을 것이다), 나는 그녀 옆에 앉아 “방해하고 싶지는 않지만, 당신이 고통스러워하고 있다는 것을 알아차리지 않을 수 없었습니다”라고 말했다.", voca: ["Rather than:~하기보다", "elicited:이끌어냈다", "rebuttal:거절/반박", "bother:방해하다", "distress:고통/괴로움", "🍎", "🍎", "🍎", "🍎", "🍎"] },
+        { en: "I guess she saw the genuine empathy in my eyes, as she proceeded to pour out her story.", ko: "그녀가 자신의 이야기를 쏟아내기 시작한 것으로 보아 내 눈에서 진심 어린 공감을 본 것 같았다.", voca: ["genuine:진심 어린", "empathy:공감", "proceeded:시작했다/나아갔다", "pour out:쏟아내다", "🍎", "🍎", "🍎", "🍎", "🍎", "🍎"] },
+        { en: "Her sister, who was relatively young, had just lost her husband, and this woman had spent the week being the rock upon which her sister could lean.", ko: "비교적 젊은 그녀의 여동생이 방금 남편을 잃었고, 이 여성은 여동생이 기댈 수 있는 버팀목이 되어 한 주를 보냈던 것이다.", voca: ["relatively:비교적", "lost husband:남편을 잃은", "rock:버팀목/바위", "lean:기대다", "🍎", "🍎", "🍎", "🍎", "🍎", "🍎"] },
+        { en: "Only now that she was leaving did she allow the flood of grief for her sister to deluge her, to the point where she abandoned her inhibitions and cried her heart out in such a public place.", ko: "떠나게 된 이제서야 그녀는 여동생에 대한 슬픔의 홍수가 자신을 집어삼키게 두었고, 어색함을 버리고 그런 공공장소에서 마음껏 울게 된 지경에 이르렀다.", voca: ["grief:슬픔", "deluge:집어삼키다/침수시키다", "abandoned:버렸다", "inhibitions:어색함/억제", "public place:공공장소", "🍎", "🍎", "🍎", "🍎", "🍎"] },
+        { en: "She spoke to me for just a few minutes, but I sensed that she parted from me a little comforted; for somebody else had just for a moment reached out to her and provided a shoulder for her to cry on, in a reversal of her usual role.", ko: "그녀는 단 몇 분 동안 나에게 이야기했지만, 나는 그녀가 조금 위로를 받으며 나와 헤어졌음을 느꼈다. 평소의 역할과는 반대로 누군가 다른 사람이 잠시 그녀에게 손을 내밀어 울 수 있는 어깨를 빌려주었기 때문이다.", voca: ["sensed:느꼈다", "parted:헤어졌다", "comforted:위로받은", "reached out:손을 내밀다", "reversal:반전/역전", "🍎", "🍎", "🍎", "🍎", "🍎"] },
+        { en: "I am often afraid of rejection and assume that no one would want me specifically to comfort them.", ko: "나는 종종 거절이 두렵고 아무도 내가 특별히 그들을 위로해 주는 것을 원하지 않을 것이라고 가정한다.", voca: ["afraid:두려운", "rejection:거절", "assume:가정하다", "specifically:특별히", "comfort:위로하다", "🍎", "🍎", "🍎", "🍎", "🍎"] },
+        { en: "But it’s not true — where there is real emotion, there can never be enough warm hands to hold, empathetic eyes to reflect the pain, and shoulders to cry on.", ko: "하지만 그것은 사실이 아니다. 진정한 감정이 있는 곳에는 잡을 수 있는 따뜻한 손, 고통을 반영하는 공감 어린 눈, 그리고 기댈 수 있는 어깨가 결코 부족할 수 없기 때문이다.", voca: ["true:사실인", "empathetic:공감 어린", "reflect:반영하다/비추다", "🍎", "🍎", "🍎", "🍎", "🍎", "🍎", "🍎"] }
+    ];
+
+    let currentMode = 'INTRO'; let currentIdx = 0; const synth = window.speechSynthesis;
+
+    function render() {
+        const area = document.getElementById('display-area'); const nav = document.getElementById('nav-area'); const header = document.getElementById('header-title'); area.innerHTML = '';
+        if (currentMode === 'INTRO') {
+            header.innerText = "Step 1. Overview"; nav.classList.add('hidden');
+            area.innerHTML = `<div class="main-title-card"><h1>The Power of Warm Hands</h1></div>
+                <div class="structure-container">
+                    <div class="struct-item"><span class="struct-label">📍 도입: 공항에서 들린 울음소리</span><div class="struct-text">벤구리온 공항에서 홀로 흐느끼는 여성을 발견한 화자는 다가가야 할지 고민하며 그녀의 고통에 마음 아파합니다.</div></div>
+                    <div class="struct-item"><span class="struct-label">📍 본론: 용기 낸 공감과 사연의 공유</span><div class="struct-text">화자는 용기를 내어 질문 대신 공감을 건네고, 여동생의 사별로 버팀목 역할을 해오다 마침내 슬픔을 터뜨린 그녀의 사연을 듣게 됩니다.</div></div>
+                    <div class="struct-item"><span class="struct-label">📍 결론: 위로의 가치와 깨달음</span><div class="struct-text">짧은 위로가 그녀에게 평안을 주었음을 깨달으며, 화자는 진심 어린 감정이 있는 곳에는 언제나 따뜻한 공감이 필요함을 배웁니다.</div></div>
+                </div>
+                <div class="topic-area"><span class="topic-title">📌 Topic (주제)</span><span class="topic-kor">낯선 이의 고통에 다가가는 용기와 진심 어린 위로가 지닌 힘</span><span class="topic-eng">The power of genuine empathy and the courage to reach out to strangers in pain.</span></div>
+                <button class="btn-start-next" onclick="startStep(2)">STEP 2: 문장 학습 시작 ▶</button><button class="btn-start-next" style="background:#FFF59D; color:#5D4037; border:2px solid #FBC02D;" onclick="startStep(3)">STEP 3: 영작 연습 시작 ▶</button>`;
+        } else {
+            const stepNum = currentMode === 'STEP2' ? 2 : 3; header.innerText = `STEP ${stepNum}. (${currentIdx + 1}/${fullData.length})`; nav.classList.remove('hidden');
+            document.getElementById('main-next-btn').innerText = (currentIdx === fullData.length - 1) ? "FINISH" : "NEXT";
+            const item = fullData[currentIdx];
+            if (currentMode === 'STEP2') {
+                area.innerHTML = `<div class="sentence-box" onclick="playTTS('${item.en.replace(/'/g, "\\'")}')">${item.en}</div><div class="voca-grid" id="voca-area"></div><button class="btn-check" onclick="toggleView('trans-area')">해석 확인하기</button><div id="trans-area" class="trans-content">${item.ko}</div>`; fillVoca(item.voca);
+            } else {
+                area.innerHTML = `<div class="kor-box">${item.ko}</div><div class="blank-area" id="blank-area"></div><div class="voca-grid" id="voca-area"></div><button class="btn-check" onclick="toggleView('trans-area')">정답 확인하기</button><div id="trans-area" class="trans-content">${item.en}</div>`; fillBlanks(item.en); fillVoca(item.voca);
+            }
+        }
+    }
+
+    function handleNext() { if (currentIdx < fullData.length - 1) { currentIdx++; render(); } else { window.location.href = '../../index.html'; } }
+    function handlePrev() { if (currentIdx > 0) { currentIdx--; render(); } else { window.location.href = '../../index.html'; } }
+
+    function fillVoca(v) { const c = document.getElementById('voca-area'); for(let i=0; i<10; i++){ const d = document.createElement('div'); d.className = 'voca-item'; if(v[i] && v[i] !== '🍎'){ const [e,k]=v[i].split(':'); d.innerText=e; d.onclick=function(){this.classList.toggle('revealed');this.innerText=this.classList.contains('revealed')?k:e;}; }else{ d.innerText='🍎'; d.style.color="#FF3B30"; d.style.cursor="default"; } c.appendChild(d); } }
+    
+    function fillBlanks(s) {
+        const c = document.getElementById('blank-area');
+        const prepositions = ["in", "on", "at", "by", "for", "from", "of", "with", "to", "into", "onto", "upon", "about", "above", "across", "after", "against", "along", "among", "around", "as", "before", "behind", "below", "beneath", "beside", "between", "beyond", "during", "except", "inside", "near", "off", "outside", "over", "past", "since", "through", "throughout", "under", "underneath", "until", "up", "within", "without"];
+        s.split(' ').forEach(w => {
+            const sp = document.createElement('span');
+            sp.className = 'word-blank'; sp.innerText = w;
+            const pureWord = w.toLowerCase().replace(/[.,'":;?!()“”]/g, "");
+            if (prepositions.includes(pureWord)) { sp.classList.add('revealed'); sp.style.borderBottomColor = 'transparent'; }
+            sp.onclick = function() { this.classList.add('revealed'); this.style.borderBottomColor = 'transparent'; playTTS(w.replace(/[.,'"]/g, "")); };
+            c.appendChild(sp);
+        });
+    }
+    
+    function startStep(s) { currentMode = 'STEP' + s; currentIdx = 0; render(); }
+    function playTTS(t) { synth.cancel(); const u = new SpeechSynthesisUtterance(t); u.lang = 'en-US'; u.rate = 0.9; synth.speak(u); }
+    function toggleView(id) { const el = document.getElementById(id); el.style.display = (el.style.display === 'block') ? 'none' : 'block'; }
+    window.onload = render;
+</script>
+</body>
+</html>

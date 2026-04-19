@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>English Master - Deliberative Democracy</title>
+    <style>
+        :root { 
+            --yellow-light: #FFFDE7; --yellow-pale: #FFF9C4; --yellow-main: #FBC02D; 
+            --yellow-dark: #F57F17; --pink-soft: #FFF5F7; --text-dark: #5D4037;
+        }
+        body { font-family: 'Pretendard', sans-serif; margin: 0; background: #FFFEF0; display: flex; justify-content: center; min-height: 100vh; }
+        .phone-container { width: 100%; max-width: 450px; background: white; display: flex; flex-direction: column; position: relative; box-shadow: 0 0 20px rgba(0,0,0,0.05); }
+        .header { padding: 12px; text-align: center; font-weight: bold; color: var(--yellow-dark); border-bottom: 1px solid var(--yellow-pale); background: white; font-size: 0.95rem; position: sticky; top: 0; z-index: 10; }
+        #display-area { flex: 1; padding: 20px; display: flex; flex-direction: column; }
+        .hidden { display: none !important; }
+        .nav-btns-fixed { display: flex; padding: 15px; background: white; border-top: 1px solid #eee; margin-top: auto; position: sticky; bottom: 0; align-items: stretch; height: 80px; box-sizing: border-box; }
+        .btn-prev { background: #F5F5F5; color: #718096; border-radius: 15px; border: none; font-size: 1.1rem; font-weight: bold; cursor: pointer; width: 30%; margin-right: 10px; display: flex; align-items: center; justify-content: center; }
+        .btn-next { background: var(--yellow-main); color: var(--text-dark); border-radius: 15px; border: none; font-size: 1.1rem; font-weight: bold; cursor: pointer; flex: 1; display: flex; align-items: center; justify-content: center; }
+        .main-title-card { width: auto; background: var(--yellow-main); padding: 25px 15px; border-radius: 20px; color: var(--text-dark); margin-bottom: 20px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); box-sizing: border-box; }
+        .main-title-card h1 { margin: 0; font-size: 1.4rem; font-weight: 900; line-height: 1.3; }
+        .structure-container { background: var(--yellow-light); border: 2px solid var(--yellow-pale); border-radius: 20px; padding: 20px; margin-bottom: 20px; color: var(--text-dark); }
+        .struct-item { margin-bottom: 18px; border-bottom: 1px dashed var(--yellow-pale); padding-bottom: 10px; }
+        .struct-item:last-child { border: none; }
+        .struct-label { font-weight: 900; color: #E65100; font-size: 0.95rem; display: block; margin-bottom: 6px; }
+        .struct-text { font-size: 0.9rem; line-height: 1.6; font-weight: 500; text-align: justify; }
+        .topic-area { background: var(--pink-soft); border: 2px solid #F8BBD0; border-radius: 20px; padding: 20px; text-align: center; margin-bottom: 20px; }
+        .topic-title { font-weight: bold; color: #D81B60; font-size: 0.85rem; display: block; margin-bottom: 10px; }
+        .topic-kor { font-weight: bold; color: #333; font-size: 1rem; display: block; line-height: 1.5; margin-bottom: 8px; }
+        .topic-eng { font-size: 0.85rem; color: #666; font-style: italic; display: block; line-height: 1.4; }
+        .sentence-box { background: var(--yellow-light); padding: 20px; border-radius: 20px; font-size: 1.1rem; font-weight: 700; color: var(--text-dark); margin-bottom: 15px; border: 2px solid var(--yellow-pale); text-align: center; cursor: pointer; line-height: 1.5; }
+        .kor-box { background: #FFF5F7; padding: 20px; border-radius: 20px; font-size: 0.95rem; font-weight: 600; color: #D81B60; margin-bottom: 15px; border: 2px solid #F8BBD0; text-align: center; line-height: 1.6; }
+        .voca-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px; }
+        .voca-item { background: #fff; padding: 10px; border-radius: 10px; font-size: 0.82rem; border: 1px solid var(--yellow-pale); cursor: pointer; text-align: center; font-weight: 600; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+        .voca-item.revealed { background: var(--yellow-main); color: var(--text-dark); }
+        .blank-area { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin-bottom: 20px; padding: 10px; background: #fdfdfd; border-radius: 15px; }
+        .word-blank { border-bottom: 2px solid var(--yellow-main); min-width: 35px; text-align: center; font-size: 1rem; color: transparent; cursor: pointer; padding: 0 2px; }
+        .word-blank.revealed { color: var(--text-dark); border-bottom-color: transparent; font-weight: bold; }
+        .btn-check { background: #f0f0f0; padding: 12px; border-radius: 12px; border: none; font-weight: bold; margin-bottom: 10px; cursor: pointer; width: 100%; font-size: 0.9rem; }
+        .trans-content { display: none; padding: 15px; background: #fafafa; border-radius: 15px; border-left: 5px solid var(--yellow-main); font-size: 0.9rem; margin-bottom: 10px; }
+        .btn-start-next { background: var(--yellow-main); color: var(--text-dark); padding: 16px; border-radius: 15px; border: none; font-size: 1.1rem; font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px; }
+    </style>
+</head>
+<body>
+<div class="phone-container">
+    <div class="header" id="header-title">English Master - EBS MT2-27</div>
+    <div id="display-area"></div>
+    <div id="nav-area" class="nav-btns-fixed hidden">
+        <button class="btn-prev" onclick="handlePrev()">PREV</button>
+        <button class="btn-next" onclick="handleNext()" id="main-next-btn">NEXT</button>
+    </div>
+</div>
+<script>
+    const fullData = [
+        { en: "Democracy’s constitution is not tradition bound; it looks forward as well as backward.", ko: "민주주의의 헌법은 전통에 얽매이지 않으며, 과거뿐만 아니라 미래도 내다본다.", voca: ["constitution:헌법", "tradition bound:전통에 얽매인", "looks forward:미래를 내다보다", "backward:과거의/뒤로", "🍎", "🍎", "🍎", "🍎", "🍎", "🍎"] },
+        { en: "Because deliberative democrats want to ensure rule by free and equal citizens, they refuse to honor traditions as such.", ko: "숙의 민주주의자들은 자유롭고 평등한 시민에 의한 통치를 보장하기를 원하기 때문에, 전통 그 자체를 존중하기를 거부한다.", voca: ["deliberative:숙의하는", "democrats:민주주의자", "ensure:보장하다", "rule:통치", "refuse:거부하다", "honor:존중하다/기리다", "🍎", "🍎", "🍎", "🍎"] },
+        { en: "A democratic constitution makes it more likely that people will look behind traditions in order to see what can be said on their behalf.", ko: "민주주의 헌법은 사람들이 전통의 이면을 살펴보고 그것들을 옹호하여 무슨 말을 할 수 있는지 확인하게 할 가능성을 더 높여 준다.", voca: ["likely:가능성 있는", "look behind:이면을 살피다", "in order to:~하기 위해서", "on their behalf:~을 옹호하여", "🍎", "🍎", "🍎", "🍎", "🍎", "🍎"] },
+        { en: "For similar reasons, a self-governing citizenry does not take existing preferences and beliefs as unalterable, as natural, or as “givens.”", ko: "비슷한 이유로, 자치적인 시민단은 기존의 선호와 신념을 바꿀 수 없는 것, 자연스러운 것, 또는 ‘주어진 것’으로 받아들이지 않는다.", voca: ["self-governing:자치적인", "citizenry:시민단", "existing:기존의", "preferences:선호", "beliefs:신념", "unalterable:바꿀 수 없는", "🍎", "🍎", "🍎", "🍎"] },
+        { en: "A central point of deliberation, in the private and public domains, is to shape both preferences and beliefs, and frequently to alter them, by subjecting them to reasoned arguments.", ko: "사적 및 공적 영역에서 숙의의 핵심은 선호와 신념을 이성적인 논쟁에 맡김으로써 그 둘을 형성하고 빈번하게 바꾸는 것이다.", voca: ["central point:핵심", "deliberation:숙의", "domains:영역", "shape:형성하다", "alter:바꾸다", "subjecting to:~에 맡기다", "reasoned arguments:이성적 논쟁", "🍎", "🍎", "🍎"] },
+        { en: "For the same reason, deliberative democrats are critical of social practices that form preferences, and especially children’s preferences, in a way that inculcates beliefs that threaten free and equal citizenship.", ko: "같은 이유로, 숙의 민주주의자들은 선호, 특히 아이들의 선호를 자유롭고 평등한 시민권을 위협하는 신념을 심어 주는 방식으로 형성하는 사회적 관행에 대해 비판적이다.", voca: ["critical:비판적인", "social practices:사회적 관행", "especially:특히", "inculcates:심어 주다", "threaten:위협하다", "citizenship:시민권", "🍎", "🍎", "🍎", "🍎"] },
+        { en: "A democratic constitution creates structures that will promote freedom in the formation of preferences and not simply implement whatever preferences people happen to have.", ko: "민주주의 헌법은 선호의 형성에 있어서 자유를 증진하는 구조를 만들며, 사람들이 우연히 갖게 된 선호가 무엇이든 그것을 단순히 시행하는 것은 아니다.", voca: ["promote:증진하다", "formation:형성", "implement:시행하다", "whatever:무엇이든", "happen to:우연히 ~하다", "🍎", "🍎", "🍎", "🍎", "🍎"] }
+    ];
+
+    let currentMode = 'INTRO'; let currentIdx = 0; const synth = window.speechSynthesis;
+
+    function render() {
+        const area = document.getElementById('display-area'); const nav = document.getElementById('nav-area'); const header = document.getElementById('header-title'); area.innerHTML = '';
+        if (currentMode === 'INTRO') {
+            header.innerText = "Step 1. Overview"; nav.classList.add('hidden');
+            area.innerHTML = `<div class="main-title-card"><h1>Democracy and Preference Formation</h1></div>
+                <div class="structure-container">
+                    <div class="struct-item"><span class="struct-label">📍 도입: 미래지향적인 민주주의 헌법</span><div class="struct-text">민주주의 헌법은 전통에만 얽매이지 않고, 자유롭고 평등한 통치를 위해 전통을 비판적으로 검토합니다.</div></div>
+                    <div class="struct-item"><span class="struct-label">📍 본론: 숙의를 통한 선호와 신념의 변화</span><div class="struct-text">시민들은 기존의 선호를 고정된 것으로 보지 않으며, 이성적 논쟁(숙의)을 통해 이를 형성하고 수정해 나갑니다.</div></div>
+                    <div class="struct-item"><span class="struct-label">📍 결론: 자유로운 선호 형성의 보장</span><div class="struct-text">헌법은 단순히 우연한 선호를 따르는 것이 아니라, 민주적 가치를 지키며 자유롭게 선호를 형성할 수 있는 구조를 만듭니다.</div></div>
+                </div>
+                <div class="topic-area"><span class="topic-title">📌 Topic (주제)</span><span class="topic-kor">숙의 민주주의 하에서 이성적 논의를 통한 선호 형성의 자유와 헌법의 역할</span><span class="topic-eng">The freedom of preference formation through rational deliberation and the role of the constitution.</span></div>
+                <button class="btn-start-next" onclick="startStep(2)">STEP 2: 문장 학습 시작 ▶</button><button class="btn-start-next" style="background:#FFF59D; color:#5D4037; border:2px solid #FBC02D;" onclick="startStep(3)">STEP 3: 영작 연습 시작 ▶</button>`;
+        } else {
+            const stepNum = currentMode === 'STEP2' ? 2 : 3; header.innerText = `STEP ${stepNum}. (${currentIdx + 1}/${fullData.length})`; nav.classList.remove('hidden');
+            document.getElementById('main-next-btn').innerText = (currentIdx === fullData.length - 1) ? "FINISH" : "NEXT";
+            const item = fullData[currentIdx];
+            if (currentMode === 'STEP2') {
+                area.innerHTML = `<div class="sentence-box" onclick="playTTS('${item.en.replace(/'/g, "\\'")}')">${item.en}</div><div class="voca-grid" id="voca-area"></div><button class="btn-check" onclick="toggleView('trans-area')">해석 확인하기</button><div id="trans-area" class="trans-content">${item.ko}</div>`; fillVoca(item.voca);
+            } else {
+                area.innerHTML = `<div class="kor-box">${item.ko}</div><div class="blank-area" id="blank-area"></div><div class="voca-grid" id="voca-area"></div><button class="btn-check" onclick="toggleView('trans-area')">정답 확인하기</button><div id="trans-area" class="trans-content">${item.en}</div>`; fillBlanks(item.en); fillVoca(item.voca);
+            }
+        }
+    }
+
+    function handleNext() { if (currentIdx < fullData.length - 1) { currentIdx++; render(); } else { window.location.href = '../../index.html'; } }
+    function handlePrev() { if (currentIdx > 0) { currentIdx--; render(); } else { window.location.href = '../../index.html'; } }
+
+    function fillVoca(v) { const c = document.getElementById('voca-area'); for(let i=0; i<10; i++){ const d = document.createElement('div'); d.className = 'voca-item'; if(v[i] && v[i] !== '🍎'){ const [e,k]=v[i].split(':'); d.innerText=e; d.onclick=function(){this.classList.toggle('revealed');this.innerText=this.classList.contains('revealed')?k:e;}; }else{ d.innerText='🍎'; d.style.color="#FF3B30"; d.style.cursor="default"; } c.appendChild(d); } }
+    
+    function fillBlanks(s) {
+        const c = document.getElementById('blank-area');
+        const prepositions = ["in", "on", "at", "by", "for", "from", "of", "with", "to", "into", "onto", "upon", "about", "above", "across", "after", "against", "along", "among", "around", "as", "before", "behind", "below", "beneath", "beside", "between", "beyond", "during", "except", "inside", "near", "off", "outside", "over", "past", "since", "through", "throughout", "under", "underneath", "until", "up", "within", "without"];
+        s.split(' ').forEach(w => {
+            const sp = document.createElement('span');
+            sp.className = 'word-blank'; sp.innerText = w;
+            const pureWord = w.toLowerCase().replace(/[.,'":;?!()“”]/g, "");
+            if (prepositions.includes(pureWord)) { sp.classList.add('revealed'); sp.style.borderBottomColor = 'transparent'; }
+            sp.onclick = function() { this.classList.add('revealed'); this.style.borderBottomColor = 'transparent'; playTTS(w.replace(/[.,'"]/g, "")); };
+            c.appendChild(sp);
+        });
+    }
+    
+    function startStep(s) { currentMode = 'STEP' + s; currentIdx = 0; render(); }
+    function playTTS(t) { synth.cancel(); const u = new SpeechSynthesisUtterance(t); u.lang = 'en-US'; u.rate = 0.9; synth.speak(u); }
+    function toggleView(id) { const el = document.getElementById(id); el.style.display = (el.style.display === 'block') ? 'none' : 'block'; }
+    window.onload = render;
+</script>
+</body>
+</html>
